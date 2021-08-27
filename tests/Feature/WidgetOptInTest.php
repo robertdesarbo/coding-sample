@@ -10,14 +10,14 @@ use App\Models\WidgetOptIn;
 
 class WidgetOptInTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function test_opting_in_to_widget_success_status_code()
     {
         $response = $this->post('/api/widget-opt-in', [
-            'email' => 'test@gmail.com',
-            'first_name' => 'Robert',
-            'last_name' => 'DeSarbo',
+            'email' => $this->faker->unique()->safeEmail(),
+            'first_name' => $this->faker->name(),
+            'last_name' => $this->faker->name(),
             'opt_in' => true
         ]);
 
@@ -27,7 +27,7 @@ class WidgetOptInTest extends TestCase
     public function test_opting_in_to_widget_validation_error_status_code()
     {
         $response = $this->post('/api/widget-opt-in', [
-            'email' => 'test@gmail.com',
+            'email' => $this->faker->unique()->safeEmail(),
         ]);
 
         $response->assertStatus(422);
@@ -46,6 +46,32 @@ class WidgetOptInTest extends TestCase
             'email' => 'test@gmail.com',
             'first_name' => 'Robert',
             'last_name' => 'DeSarbo',
+            'opt_in' => true
+        ]);
+    }
+
+    public function test_opting_in_to_widget_no_duplicate_emails()
+    {
+        $this->post('/api/widget-opt-in', [
+            'email' => 'test@gmail.com',
+            'first_name' => 'Robert',
+            'last_name' => 'DeSarbo',
+            'opt_in' => true
+        ]);
+
+        $this->post('/api/widget-opt-in', [
+            'email' => 'test@gmail.com',
+            'first_name' => 'Frank',
+            'last_name' => 'Robot',
+            'opt_in' => true
+        ]);
+
+        $this->assertDatabaseCount('widget_opt_ins', 1);
+
+        $this->assertDatabaseMissing('widget_opt_ins', [
+            'email' => 'test@gmail.com',
+            'first_name' => 'Frank',
+            'last_name' => 'Robot',
             'opt_in' => true
         ]);
     }
