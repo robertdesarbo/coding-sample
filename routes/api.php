@@ -22,6 +22,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 });
 
+// allows a user to opt-in and opt-out of a widget
 Route::resource('widget-opt-in', WidgetOptInController::class);
 
 Route::post('/tokens/create', function (Request $request) {
