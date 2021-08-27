@@ -12,7 +12,7 @@ class WidgetOptInTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function test_opting_in_to_widget_success_status_code()
+    public function test_opting_in_to_a_widget_with_a_success_status_code()
     {
         $response = $this->post('/api/widget-opt-in', [
             'email' => $this->faker->unique()->safeEmail(),
@@ -24,7 +24,7 @@ class WidgetOptInTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function test_opting_in_to_widget_validation_error_status_code()
+    public function test_opting_in_to_a_widget_with_a_validation_error_status_code()
     {
         $response = $this->post('/api/widget-opt-in', [
             'email' => $this->faker->unique()->safeEmail(),
@@ -33,7 +33,7 @@ class WidgetOptInTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_opting_in_to_widget_correct_database_values()
+    public function test_opting_in_to_a_widget_with_correct_database_values()
     {
         $this->post('/api/widget-opt-in', [
             'email' => 'test@gmail.com',
@@ -50,7 +50,7 @@ class WidgetOptInTest extends TestCase
         ]);
     }
 
-    public function test_opting_in_to_widget_no_duplicate_emails()
+    public function test_opting_in_to_a_widget_with_no_duplicate_emails()
     {
         $this->post('/api/widget-opt-in', [
             'email' => 'test@gmail.com',
@@ -76,7 +76,7 @@ class WidgetOptInTest extends TestCase
         ]);
     }
 
-    public function test_opting_out_to_widget_correct_database_values()
+    public function test_opting_out_of_a_widget_with_correct_database_values()
     {
         $widgetOptIn = WidgetOptIn::create([
             'email' => 'test@gmail.com',
