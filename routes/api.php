@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\PeopleController;
+use App\Http\Controllers\WidgetOptInController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +16,18 @@ use App\Http\Controllers\PeopleController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
 });
 
-Route::get('people', [PeopleController::class, 'people']);
+Route::resource('widget-opt-in', WidgetOptInController::class);
+
+Route::post('/tokens/create', function (Request $request) {
+    $token = $request->user()->createToken($request->token_name);
+
+    return ['token' => $token->plainTextToken];
+});
+
+
